@@ -2,9 +2,11 @@
 
 namespace Elison\GoogleAuthenticator\Helpers;
 
+use App\Models\TwoFaCredential;
+
 class GoogleAuthenticator
 {
-    protected $base32Table = [
+    protected static $base32Table = [
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
         'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
         'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
@@ -12,14 +14,14 @@ class GoogleAuthenticator
         '=',
     ];
 
-    protected $codeLength = 6;
-    protected $modeOfCodeLength = 1000000;
+    protected static $codeLength = 6;
+    protected static $modeOfCodeLength = 1000000;
 
-    public function generateSecret()
+    private static function generateSecret()
     {
         $secretStringLength = 16;
 
-        $base32Table = $this->base32Table;
+        $base32Table = self::$base32Table;
 
         $secretString = '';
 
@@ -32,18 +34,24 @@ class GoogleAuthenticator
         return $secretString;
     }
 
-    public function generateQrCodeUrl($applicationName, $width, $height, $level)
+    public static function generateQrCodeUrl($applicationName, $width, $height, $level)
     {
-        $secretString = $this->generateSecret();
+        $secretString = self::generateSecret();;
 
         $encodedParameters = urlencode('otpauth://totp/' . $applicationName . '?secret=' . $secretString);
 
         return "https://api.qrserver.com/v1/create-qr-code/?data=$encodedParameters&size=${width}x${height}&ecc=$level";
     }
-
-    public function base32Decode($secretKey)
+    public static function setCredentials($userId, $secretKey)
     {
-        $base32Table = $this->base32Table;
+        TwoFaCredential::updateOrCreate(
+            ['user_id' => $userId],
+            ['secret_key' => $secretKey]);
+    }
+
+    public static function base32Decode($secretKey)
+    {
+        $base32Table = self::$base32Table;
         $base32ArrayKeys = array_flip($base32Table);
 
         $secretRemoveEqualSign = str_replace('=', '', $secretKey);
@@ -66,11 +74,11 @@ class GoogleAuthenticator
         return $binaryString;
     }
 
-    private function get2FaCode($secretKey)
+    private static function get2FaCode($secretKey)
     {
         $timeToResetCode = floor(time() / 30);
 
-        $secretKeyBase32Decoded = $this->base32Decode($secretKey);
+        $secretKeyBase32Decoded = self::base32Decode($secretKey);
 
         $time = chr(0) . chr(0) . chr(0) . chr(0) . pack('N*', $timeToResetCode);
         $hash = hash_hmac('SHA1', $time, $secretKeyBase32Decoded, true);
@@ -82,7 +90,11 @@ class GoogleAuthenticator
 
         $firstUnpackedBinaryValue = $firstUnpackedBinaryValue & 0x7FFFFFFF;
 
-        return str_pad($firstUnpackedBinaryValue % $this->modeOfCodeLength, $this->codeLength, '0', STR_PAD_LEFT);
+        return str_pad($firstUnpackedBinaryValue % self::$modeOfCodeLength, self::$codeLength, '0', STR_PAD_LEFT);
+    }
+    public static function checkIfTwoFaIsActive($userId)
+    {
+        return TwoFaCredential::where('userId', $userId)->exists();
     }
 
 }
