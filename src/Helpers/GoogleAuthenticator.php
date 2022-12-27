@@ -42,6 +42,7 @@ class GoogleAuthenticator
 
         return [$secretString, "https://api.qrserver.com/v1/create-qr-code/?data=$encodedParameters&size=${width}x${height}&ecc=$level"];
     }
+    
     public static function setCredentials($userId, $secretKey)
     {
         TwoFaCredential::updateOrCreate(
