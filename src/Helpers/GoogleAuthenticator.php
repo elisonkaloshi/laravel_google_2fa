@@ -94,7 +94,19 @@ class GoogleAuthenticator
     }
     public static function checkIfTwoFaIsActive($userId)
     {
-        return TwoFaCredential::where('userId', $userId)->exists();
+        return TwoFaCredential::where('user_id', $userId)->exists();
+    }
+
+    public static function verifyIsCodeIsValid($userId, $code)
+    {
+        if (self::checkIfTwoFaIsActive($userId)) {
+            $secretKeyOfTheUser = TwoFaCredential::where('user_id', $userId)
+                ->value('secret_key');
+
+            return $code === self::get2FaCode($secretKeyOfTheUser);
+        }
+
+        return false;
     }
 
 }
