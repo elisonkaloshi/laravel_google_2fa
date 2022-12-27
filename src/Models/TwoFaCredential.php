@@ -1,6 +1,6 @@
 <?php
 
-namespace App\GoogleAuthenticator;
+namespace Elison\GoogleAuthenticator\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

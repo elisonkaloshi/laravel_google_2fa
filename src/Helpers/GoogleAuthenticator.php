@@ -2,7 +2,7 @@
 
 namespace Elison\GoogleAuthenticator\Helpers;
 
-use App\GoogleAuthenticator\TwoFaCredential;
+use Elison\GoogleAuthenticator\Models\TwoFaCredential;
 
 class GoogleAuthenticator
 {
