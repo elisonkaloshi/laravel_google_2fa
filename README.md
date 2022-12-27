@@ -18,7 +18,7 @@ Package for 2fa Google authentication in Laravel Framework
 
 ### Methods available
 
-`1. GoogleAuthenticator::generateQrCodeUrl($applicationName, $width, $height, $level)` -> This method generates the QR Code which user needs to scan with Google Authenticator
+`1. GoogleAuthenticator::generateQrCodeUrl($applicationName, $width, $height, $level)` -> This method generates the QR Code which user needs to scan with Google Authenticator, and returns the secret key and qr code url
 
 `2. GoogleAuthenticator::setCredentials($userId, $secretKey)` -> This method stores the secret key for the user that will be used later on, it may be used when the user has finished with code scanning
 
