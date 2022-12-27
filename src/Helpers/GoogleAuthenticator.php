@@ -34,13 +34,13 @@ class GoogleAuthenticator
         return $secretString;
     }
 
-    public static function generateQrCodeUrl($applicationName, $width, $height, $level)
+    public static function generateQrCodeUrl($applicationName, $width, $height, $level = 'M')
     {
         $secretString = self::generateSecret();;
 
         $encodedParameters = urlencode('otpauth://totp/' . $applicationName . '?secret=' . $secretString);
 
-        return "https://api.qrserver.com/v1/create-qr-code/?data=$encodedParameters&size=${width}x${height}&ecc=$level";
+        return [$secretString, "https://api.qrserver.com/v1/create-qr-code/?data=$encodedParameters&size=${width}x${height}&ecc=$level"];
     }
     public static function setCredentials($userId, $secretKey)
     {
