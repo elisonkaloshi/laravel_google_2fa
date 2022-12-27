@@ -1,0 +1,22 @@
+{
+    "name": "elison/laravel_google_2fa",
+    "description": "A Package for 2fa google authentication in Laravel Framework",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Elison\\GoogleAuthenticator\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Elison Kaloshi",
+            "email": "elisonkaloshi@gmail.com"
+        },
+        {
+            "name": "Paola Tili",
+            "email": "paolatili01@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
