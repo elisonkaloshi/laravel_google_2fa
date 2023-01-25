@@ -24,4 +24,4 @@ Package for 2fa Google authentication in Laravel Framework
 
 `3. GoogleAuthenticator::checkIfTwoFaIsActive($userId)` -> This method checks if the 2fa is active for the user, can be used to not display qr code again for an already authenticated user.
 
-`4. GoogleAuthenticator::verifyIsCodeIsValid($userId, $code)` -> This method verifies if the code that the authenticated user enters is valid.
+`4. GoogleAuthenticator::verifyIfCodeIsValid($userId, $code)` -> This method verifies if the code that the authenticated user enters is valid.
